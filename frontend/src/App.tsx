@@ -3,12 +3,13 @@ import "./App.css";
 import { Header } from "./components/Header";
 import { ChatView } from "./components/ChatView";
 import { SearchView } from "./components/SearchView";
+import { IngestView } from "./components/IngestView";
 import { sendChatMessage, checkBackendHealth } from "./api";
 import { ChatMessage } from "./types";
 
 export const App: React.FC = () => {
   const [token, setToken] = useState<string>("tok-ops-admin");
-  const [activeTab, setActiveTab] = useState<"chat" | "search">("chat");
+  const [activeTab, setActiveTab] = useState<"chat" | "ingest" | "search">("chat");
   const [backendOnline, setBackendOnline] = useState<boolean>(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -61,11 +62,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="app-root">
-      <Header
-        token={token}
-        onTokenChange={setToken}
-        backendOnline={backendOnline}
-      />
+      <Header token={token} onTokenChange={setToken} backendOnline={backendOnline} />
 
       <nav className="tab-navigation">
         <button
@@ -77,6 +74,13 @@ export const App: React.FC = () => {
         </button>
         <button
           type="button"
+          className={`tab-btn ${activeTab === "ingest" ? "active" : ""}`}
+          onClick={() => setActiveTab("ingest")}
+        >
+          📥 Ingesta de Eventos (POST)
+        </button>
+        <button
+          type="button"
           className={`tab-btn ${activeTab === "search" ? "active" : ""}`}
           onClick={() => setActiveTab("search")}
         >
@@ -85,7 +89,7 @@ export const App: React.FC = () => {
       </nav>
 
       <main className="app-main">
-        {activeTab === "chat" ? (
+        {activeTab === "chat" && (
           <ChatView
             messages={messages}
             loading={loading}
@@ -93,9 +97,9 @@ export const App: React.FC = () => {
             onSendMessage={handleSendMessage}
             onClearChat={handleClearChat}
           />
-        ) : (
-          <SearchView token={token} />
         )}
+        {activeTab === "ingest" && <IngestView token={token} />}
+        {activeTab === "search" && <SearchView token={token} />}
       </main>
     </div>
   );

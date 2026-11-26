@@ -44,6 +44,35 @@ export async function searchDeliveries(
   return body;
 }
 
+export interface IngestResponse {
+  status: number;
+  duplicate: boolean;
+  delivery?: Record<string, any>;
+  error?: { code: string; message: string; details?: any };
+}
+
+export async function ingestDeliveryEvent(
+  token: string,
+  eventData: Record<string, any>
+): Promise<IngestResponse> {
+  const res = await fetch(`${API_BASE}/events`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(eventData),
+  });
+
+  const body = await res.json();
+  return {
+    status: res.status,
+    duplicate: Boolean(body?.duplicate),
+    delivery: body?.delivery,
+    error: body?.error,
+  };
+}
+
 export async function checkBackendHealth(): Promise<boolean> {
   try {
     const res = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(2000) });
