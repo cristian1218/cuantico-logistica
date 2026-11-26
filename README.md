@@ -39,10 +39,9 @@ make dev-backend
 # En la Terminal 2 (Frontend React + Vite en puerto 5173):
 make dev-frontend
 ```
-Abre tu navegador en `http://localhost:5173`. La interfaz incluye:
-1. **Asistente Conversacional**: Chat con orquestación ReAct que consulta herramientas deterministas y despliega en tiempo real los datos y cálculos del backend.
-2. **Buscador de Entregas REST**: Interfaz directa para probar consultas de texto libre y verificar la protección contra inyecciones SQL.
-3. **Selector de Rol / Alcance (Header)**: Permite alternar entre token de Administrador (global) y Operador acotado (ej. Tienda La 80) para verificar en vivo el control de acceso (SEC3).
+Abre tu navegador en:
+- **Frontend React:** `http://localhost:5173` (Chat con agente, visualizador de herramientas, selector de tokens y buscador de entregas).
+- **Swagger UI Interactivo:** `http://localhost:8000/docs` (Documentación OpenAPI interactiva de FastAPI para probar directamente cada endpoint REST: ingesta de eventos, reportes de comercio, mensajeros, detalle y chat con autenticación Bearer).
 
 ---
 
