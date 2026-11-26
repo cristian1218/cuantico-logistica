@@ -1,0 +1,33 @@
+[
+  {"event_id": "d1-1", "delivery_id": "d1", "merchant_id": "m-la80", "courier_id": "c-ana", "type": "creada", "occurred_at": "2026-11-17T13:00:00Z", "address": "Calle 80 # 69-20, Bogotá"},
+  {"event_id": "d1-2", "delivery_id": "d1", "merchant_id": "m-la80", "courier_id": "c-ana", "type": "asignada", "occurred_at": "2026-11-17T13:05:00Z"},
+  {"event_id": "d1-3", "delivery_id": "d1", "merchant_id": "m-la80", "courier_id": "c-ana", "type": "recogida", "occurred_at": "2026-11-17T13:30:00Z", "lat": 4.6097, "lon": -74.0817},
+  {"event_id": "d1-4", "delivery_id": "d1", "merchant_id": "m-la80", "courier_id": "c-ana", "type": "en_ruta", "occurred_at": "2026-11-17T13:40:00Z"},
+  {"event_id": "d1-5", "delivery_id": "d1", "merchant_id": "m-la80", "courier_id": "c-ana", "type": "entregada", "occurred_at": "2026-11-17T15:00:00Z", "lat": 4.7110, "lon": -74.0721},
+  {"event_id": "d1-5", "delivery_id": "d1", "merchant_id": "m-la80", "courier_id": "c-ana", "type": "entregada", "occurred_at": "2026-11-17T15:00:00Z", "lat": 4.7110, "lon": -74.0721},
+
+  {"event_id": "d2-1", "delivery_id": "d2", "merchant_id": "m-la80", "courier_id": "c-luis", "type": "creada", "occurred_at": "2026-11-17T23:00:00Z", "address": "Carrera 68 # 24-20, Bogotá"},
+  {"event_id": "d2-3", "delivery_id": "d2", "merchant_id": "m-la80", "courier_id": "c-luis", "type": "recogida", "occurred_at": "2026-11-18T01:30:00Z", "lat": 4.6486, "lon": -74.0630},
+  {"event_id": "d2-5", "delivery_id": "d2", "merchant_id": "m-la80", "courier_id": "c-luis", "type": "entregada", "occurred_at": "2026-11-18T02:30:00Z", "lat": 4.6700, "lon": -74.1100},
+
+  {"event_id": "d3-1", "delivery_id": "d3", "merchant_id": "m-cafe", "courier_id": "c-ana", "type": "creada", "occurred_at": "2026-11-19T16:00:00Z", "address": "Carrera 7 # 32-16, Bogotá"},
+  {"event_id": "d3-2", "delivery_id": "d3", "merchant_id": "m-cafe", "courier_id": "c-ana", "type": "asignada", "occurred_at": "2026-11-19T16:10:00Z"},
+  {"event_id": "d3-3", "delivery_id": "d3", "merchant_id": "m-cafe", "courier_id": "c-ana", "type": "recogida", "occurred_at": "2026-11-19T16:40:00Z", "lat": 4.6180, "lon": -74.0680},
+  {"event_id": "d3-6", "delivery_id": "d3", "merchant_id": "m-cafe", "courier_id": "c-ana", "type": "fallida", "occurred_at": "2026-11-19T18:00:00Z"},
+
+  {"event_id": "d4-1", "delivery_id": "d4", "merchant_id": "m-pizza", "courier_id": "c-pedro", "type": "creada", "occurred_at": "2026-11-20T00:30:00Z", "address": "Av. Reforma 222, Ciudad de México"},
+  {"event_id": "d4-3", "delivery_id": "d4", "merchant_id": "m-pizza", "courier_id": "c-pedro", "type": "recogida", "occurred_at": "2026-11-20T00:50:00Z", "lat": 19.4270, "lon": -99.1677},
+  {"event_id": "d4-5", "delivery_id": "d4", "merchant_id": "m-pizza", "courier_id": "c-pedro", "type": "entregada", "occurred_at": "2026-11-20T01:30:00Z", "lat": 19.4326, "lon": -99.1332},
+
+  {"event_id": "d5-5", "delivery_id": "d5", "merchant_id": "m-libro", "courier_id": "c-marta", "type": "entregada", "occurred_at": "2026-11-21T20:00:00Z", "lat": -34.5875, "lon": -58.4260},
+  {"event_id": "d5-1", "delivery_id": "d5", "merchant_id": "m-libro", "courier_id": "c-marta", "type": "creada", "occurred_at": "2026-11-21T18:00:00Z", "address": "Av. Santa Fe 3253, Buenos Aires"},
+  {"event_id": "d5-3", "delivery_id": "d5", "merchant_id": "m-libro", "courier_id": "c-marta", "type": "recogida", "occurred_at": "2026-11-21T19:00:00Z", "lat": -34.6037, "lon": -58.3816},
+
+  {"event_id": "d6-1", "delivery_id": "d6", "merchant_id": "m-flor", "courier_id": "c-pedro", "type": "creada", "occurred_at": "2026-11-22T08:00:00Z", "address": "Calle de Alcalá 50, Madrid"},
+  {"event_id": "d6-5", "delivery_id": "d6", "merchant_id": "m-flor", "courier_id": "c-pedro", "type": "entregada", "occurred_at": "2026-11-22T10:00:00Z", "lat": 40.4200, "lon": -3.7010},
+
+  {"event_id": "d7-1", "delivery_id": "d7", "merchant_id": "m-la80", "courier_id": "c-ana", "type": "creada", "occurred_at": "2026-11-25T14:00:00Z", "address": "Calle 53 # 13-45, Bogotá"},
+  {"event_id": "d7-2", "delivery_id": "d7", "merchant_id": "m-la80", "courier_id": "c-ana", "type": "asignada", "occurred_at": "2026-11-25T14:05:00Z"},
+  {"event_id": "d7-3", "delivery_id": "d7", "merchant_id": "m-la80", "courier_id": "c-ana", "type": "recogida", "occurred_at": "2026-11-25T14:30:00Z", "lat": 4.6097, "lon": -74.0817},
+  {"event_id": "d7-4", "delivery_id": "d7", "merchant_id": "m-la80", "courier_id": "c-ana", "type": "en_ruta", "occurred_at": "2026-11-25T14:40:00Z"}
+]
