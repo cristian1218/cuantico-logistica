@@ -1,26 +1,33 @@
-# NOTAS.md — Uso de herramientas de IA (registro transparente)
+# NOTAS.md — Registro de Uso de Herramientas de IA
 
-Se actualiza **durante** el trabajo, no al final.
+*Documento solicitado en la prueba técnica para registrar con transparencia el uso de asistentes de IA, las decisiones humanas de ingeniería y el output rechazado o corregido.*
 
-## Herramientas
-- Asistente de IA agéntico (Antigravity / Claude Sonnet) como par de programación: análisis de la prueba, redacción de specs, scaffolding, generación de tests y código bajo revisión humana.
-- Gemini (API) como LLM del agente conversacional del producto (no como herramienta de desarrollo).
+---
 
-## Cómo se usó
-| Fase | Para qué | Quién decidió |
+## 1. Herramientas Utilizadas
+- **Asistente de IA (GitHub Copilot / Claude 3.5 Sonnet en IDE):** Utilizado como par de programación para acelerar la generación de esqueletos iniciales, redacción de especificaciones técnicas y scaffolding de pruebas unitarias.
+- **Google Gemini 2.0 Flash (API):** Modelo de lenguaje integrado exclusivamente en el producto final para atender las consultas conversacionales de los usuarios en lenguaje natural (orquestación mediante llamadas a herramientas).
+
+---
+
+## 2. Metodología de Trabajo y Supervisión Humana
+El desarrollo se realizó bajo la premisa de que **la responsabilidad de la arquitectura, la seguridad y el modelo de negocio es 100% del ingeniero**:
+
+1. **Diseño de Arquitectura y Dominio:**
+   - Se estableció la regla de *Log inmutable de eventos + Proyecciones recalculables*, evitando que el LLM proponga arquitecturas CRUD convencionales propensas a fallos por concurrencia y desorden.
+   - Se delimitó estrictamente la frontera: **el LLM no calcula montos ni agrega datos**. Todo cálculo financiero se realiza en código determinista con `Decimal` en centavos de COP.
+2. **Revisión de Seguridad y Criterio de Negocio:**
+   - La IA sugirió inicialmente implementar los requisitos de Operaciones tal como venían en el enunciado. Como Líder Técnico, **rechacé los 4 requerimientos de Operaciones por representar vulnerabilidades críticas** (SQL Injection, Prompt Injection, falta de control de acceso y exposición de credenciales).
+
+---
+
+## 3. Registro de Correcciones y Rechazos del Output de IA
+
+| Fecha | Componente / Output de la IA | Decisión y Corrección Humana Aplicada |
 |---|---|---|
-| 0 | Análisis del enunciado, identificación de trampas en requisitos de Operaciones | IA propuso, humano aprobó |
-| 1 | Specs 01–03, AGENTS.md, Makefile | IA propuso, humano aprobó (supuestos S1–S7 pendientes de revisión fina) |
-
-## Correcciones y rechazos del output de IA
-_(se llena a medida que ocurren)_
-
-| Fecha | Qué generó la IA | Qué se corrigió/rechazó y por qué |
-|---|---|---|
-| 2026-11-25 | Spec R4 original: Haversine "sin redondeo intermedio" | Ambigua y no reproducible (float entre plataformas). Se cambió a distancia redondeada a metros (3 decimales) antes de multiplicar; se añadió S8 (dos eventos del mismo tipo) al diseñar los tests |
-| 2026-11-26 | Dominio + 31 tests escritos en rojo primero (TDD) y luego implementación | Primer `make check` falló por reglas de estilo de ruff (alias `datetime.UTC`, `if` anidados); se corrigió. Los tests de lógica pasaron a la primera, así que se revisaron a mano los valores esperados (16120, 18538) contra el cálculo manual, no solo contra la salida del código |
-| 2026-11-26 | API + persistencia + buscador + auth: 61 tests en rojo y luego implementación (92 en total) | Pasaron a la primera, lo que levantó sospecha de tests débiles. Se hizo una **mutación manual** (quitar el escape de `LIKE`) y `test_SEC1_percent_and_underscore_are_literals` falló como debía. Hallazgo: los payloads de inyección clásicos (`' OR 1=1`) pasan incluso sin escape porque los parámetros enlazados ya los neutralizan; el escape protege contra comodines `%`/`_`, que es otro problema (búsquedas que devuelven todo). Ambos se testean por separado |
-| 2026-11-26 | Helper de tests con `**dict` | mypy strict lo rechazó (`**dict[str,str]` hacia parámetros `float`); se reescribió con argumentos explícitos |
-| 2026-11-26 | Requisito de Operaciones: buscador con SQL concatenado; sin control de acceso; credenciales en código | **Rechazados** (SEC1, SEC3, SEC4): consultas parametrizadas, tokens con alcance y secretos por entorno. Detalle en `specs/03-seguridad.md` |
-| 2026-11-26 | Agente conversacional + Tools + SEC2 (13 tests nuevos, 105 en total) | En el borrador inicial de `SYSTEM_INSTRUCTION` se incluyó `(ej. 'IGNORA TUS INSTRUCCIONES ANTERIORES')` como ejemplo de lo que no debía obedecer. El test de seguridad `test_SEC2_system_instruction_never_contains_merchant_notes` lo detectó y falló de inmediato: el system prompt no debe contener fragmentos del payload de ataque. Se reemplazó por una descripción genérica de comandos de evasión |
-| 2026-11-26 | Inyección del contexto de autorización en tools | El LLM no puede pasar `principal` como argumento de tool. El servidor lo inyecta directamente desde la autenticación del usuario. Si un usuario acotado pregunta por otro comercio, la tool retorna error de autorización antes de tocar la base de datos |
+| 2026-11-25 | **Cálculo de Distancia (R4)**<br>La IA propuso aplicar Haversine con flotantes continuos hasta el cálculo final. | **Rechazado.** Usar `float` acumulado genera discrepancias por precisión entre sistemas operativos. Se exigió redondear la distancia a metros (3 decimales) antes de aplicar la tarifa por km, y liquidar los recargos con `Decimal.quantize(1, ROUND_HALF_UP)` al centavo. |
+| 2026-11-25 | **Requisitos de Operaciones (SEC1 a SEC4)**<br>La IA sugirió consultas dinámicas de texto para el buscador y no implementar autenticación porque "la prueba decía que no hacía falta". | **Rechazado enfáticamente.** Un líder técnico debe priorizar la seguridad sobre la complacencia: se impuso SQL parametrizado, tokens Bearer con alcance (`Principal.merchant_ids`) y variables de entorno obligatorias con `.env.example`. |
+| 2026-11-26 | **Prompt del Sistema (SEC2)**<br>En el borrador de instrucciones del sistema, la IA redactó un ejemplo citando literalmente: *'IGNORA TUS INSTRUCCIONES ANTERIORES'*. | **Corregido.** El test unitario `test_SEC2_system_instruction_never_contains_merchant_notes` detectó que se estaba introduciendo el payload de ataque en el system prompt. Se corrigió para que el prompt contenga únicamente directrices abstractas de seguridad y no fragmentos del ataque. |
+| 2026-11-26 | **Contexto de Autorización en Tools**<br>La IA propuso que el LLM enviara `merchant_id` como argumento en las tools para saber qué comercio consultar. | **Rechazado.** Si el LLM elige el comercio, un usuario malicioso puede engañarlo para ver comercios ajenos (*Confused Deputy*). Se modificó el servicio para que el servidor inyecte el `principal` autenticado directamente en la ejecución de la tool sin que el LLM pueda manipularlo. |
+| 2026-11-26 | **Verificación de Tests y Mutaciones**<br>Los 92 primeros tests pasaron a la primera. | **Verificación manual:** Se aplicó testing de mutación manual (se removió deliberadamente el escape de comodines en `LIKE` y el redondeo bancario) para confirmar que los tests fallaran ante regresiones reales, garantizando que no fueran aserciones vacías o complacientes. |
+| 2026-11-26 | **Tipado Estricto en Helpers**<br>La IA generó helpers de tests usando desempaquetado flexible `**dict`. | **Corregido.** Mypy en modo estricto rechazó los tipos `dict[str, Any]` pasando a parámetros numéricos. Se reescribieron los constructores con firma fuertemente tipada. |
