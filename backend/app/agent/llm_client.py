@@ -32,7 +32,7 @@ class LLMClient(Protocol):
 class GeminiLLMClient:
     """Cliente real usando el SDK oficial de Google GenAI."""
 
-    def __init__(self, api_key: str, model: str = "gemini-2.0-flash") -> None:
+    def __init__(self, api_key: str, model: str = "gemini-3.5-flash") -> None:
         self.client = genai.Client(api_key=api_key)
         self.model = model
         self.config = types.GenerateContentConfig(
@@ -40,49 +40,44 @@ class GeminiLLMClient:
             tools=[types.Tool(function_declarations=GEMINI_FUNCTION_DECLARATIONS)],
             temperature=0.0,
         )
+        self._chat: Any = None
 
     def step(self, history: list[dict[str, Any]]) -> LLMTurn:
-        # Convierte el historial a objetos types.Content
-        contents: list[types.Content] = []
-        for msg in history:
-            role = msg["role"]
-            parts: list[types.Part] = []
-            if msg.get("text"):
-                parts.append(types.Part.from_text(text=msg["text"]))
-            if "tool_calls" in msg:
-                for tc in msg["tool_calls"]:
-                    parts.append(
-                        types.Part(
-                            function_call=types.FunctionCall(
-                                name=tc["name"],
-                                args=tc["args"],
-                            )
-                        )
-                    )
-            if "tool_responses" in msg:
-                for tr in msg["tool_responses"]:
-                    parts.append(
-                        types.Part(
-                            function_response=types.FunctionResponse(
-                                name=tr["name"],
-                                response=tr["result"],
-                            )
-                        )
-                    )
-            contents.append(types.Content(role=role, parts=parts))
+        last_msg = history[-1]
 
-        response = self.client.models.generate_content(
-            model=self.model,
-            contents=contents,
-            config=self.config,
-        )
+        # Si es el primer mensaje del usuario en la conversación, iniciamos sesión de chat
+        if len(history) == 1 and last_msg.get("role") == "user":
+            self._chat = self.client.chats.create(model=self.model, config=self.config)
+            response = self._chat.send_message(last_msg.get("text", ""))
+        elif self._chat is not None and "tool_responses" in last_msg:
+            # Enviamos las respuestas de las herramientas preservando el estado de la sesión
+            parts = [
+                types.Part(
+                    function_response=types.FunctionResponse(
+                        name=tr["name"],
+                        response=tr["result"],
+                    )
+                )
+                for tr in last_msg.get("tool_responses", [])
+            ]
+            response = self._chat.send_message(parts)
+        else:
+            # Fallback seguro
+            self._chat = self.client.chats.create(model=self.model, config=self.config)
+            response = self._chat.send_message(last_msg.get("text", ""))
 
         tool_calls: list[ToolCallItem] = []
         if response.function_calls:
             for fc in response.function_calls:
                 tool_calls.append(ToolCallItem(name=fc.name or "", args=dict(fc.args or {})))
 
-        text = response.text if not tool_calls else None
+        text = None
+        if not tool_calls and response.candidates and response.candidates[0].content:
+            text_parts = [
+                p.text for p in response.candidates[0].content.parts if getattr(p, "text", None)
+            ]
+            text = "\n".join(text_parts).strip() if text_parts else response.text
+
         return LLMTurn(tool_calls=tool_calls, text=text)
 
 

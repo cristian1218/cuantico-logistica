@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     api_tokens: str = ""
     database_url: str = "sqlite:///./cuantico.db"
     gemini_api_key: str | None = None
-    gemini_model: str = "gemini-2.0-flash"
+    gemini_model: str = "gemini-3.5-flash"
 
     @field_validator("gemini_api_key")
     @classmethod
