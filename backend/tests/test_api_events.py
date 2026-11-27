@@ -22,6 +22,15 @@ def test_health_is_public(client: TestClient) -> None:
     assert client.get("/api/health").json() == {"status": "ok"}
 
 
+def test_status_endpoint(client: TestClient) -> None:
+    res = client.get("/api/status")
+    assert res.status_code == 200
+    body = res.json()
+    assert body["status"] == "ok"
+    assert "llm_connected" in body
+    assert "llm_model" in body
+
+
 # ---------- autenticacion (SEC3) ----------
 def test_SEC3_events_require_token(client: TestClient) -> None:
     r = client.post("/api/events", json=event_json("e1", "creada", "2026-11-17T12:00:00Z"))

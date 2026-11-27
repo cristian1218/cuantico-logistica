@@ -43,6 +43,10 @@ class AgentService:
         else:
             self.llm = MockLLMClient()
 
+    @property
+    def is_live_gemini(self) -> bool:
+        return isinstance(self.llm, GeminiLLMClient)
+
     def run_chat(
         self,
         conn: sqlite3.Connection,

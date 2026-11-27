@@ -73,11 +73,30 @@ export async function ingestDeliveryEvent(
   };
 }
 
-export async function checkBackendHealth(): Promise<boolean> {
+export interface BackendStatus {
+  online: boolean;
+  llmConnected: boolean;
+  llmModel: string;
+}
+
+export async function checkBackendStatus(): Promise<BackendStatus> {
   try {
-    const res = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(2000) });
-    return res.ok;
+    const res = await fetch(`${API_BASE}/status`, { signal: AbortSignal.timeout(2000) });
+    if (!res.ok) {
+      return { online: false, llmConnected: false, llmModel: "" };
+    }
+    const body = await res.json();
+    return {
+      online: true,
+      llmConnected: Boolean(body?.llm_connected),
+      llmModel: body?.llm_model || "",
+    };
   } catch {
-    return false;
+    return { online: false, llmConnected: false, llmModel: "" };
   }
+}
+
+export async function checkBackendHealth(): Promise<boolean> {
+  const status = await checkBackendStatus();
+  return status.online;
 }

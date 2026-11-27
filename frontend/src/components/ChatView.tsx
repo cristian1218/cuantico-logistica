@@ -8,6 +8,8 @@ interface Props {
   error: string | null;
   onSendMessage: (text: string) => void;
   onClearChat: () => void;
+  llmConnected?: boolean;
+  llmModel?: string;
 }
 
 const SUGGESTIONS = [
@@ -35,6 +37,8 @@ export const ChatView: React.FC<Props> = ({
   error,
   onSendMessage,
   onClearChat,
+  llmConnected,
+  llmModel,
 }) => {
   const [input, setInput] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
@@ -122,7 +126,11 @@ export const ChatView: React.FC<Props> = ({
             <div className="message-content">
               <div className="loading-indicator">
                 <span className="spinner" />
-                <span>Consultando herramientas y procesando respuesta...</span>
+                <span>
+                  {llmConnected
+                    ? `${llmModel ? `${llmModel}: ` : "Gemini: "}procesando consulta y ejecutando herramientas...`
+                    : "Simulador offline: procesando consulta y ejecutando herramientas..."}
+                </span>
               </div>
             </div>
           </div>
@@ -149,7 +157,7 @@ export const ChatView: React.FC<Props> = ({
           onChange={(e) => setInput(e.target.value)}
         />
         <button type="submit" disabled={!input.trim() || loading} className="btn-send">
-          Enviar
+          {loading ? "Respondiendo..." : "Enviar"}
         </button>
       </form>
     </div>

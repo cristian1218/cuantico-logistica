@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Query, Request, Response
 from pydantic import AwareDatetime
@@ -31,6 +31,22 @@ router = APIRouter()
 @router.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@router.get("/status")
+def status(request: Request) -> dict[str, Any]:
+    agent_svc = getattr(request.app.state, "agent_service", None)
+    is_live = agent_svc.is_live_gemini if agent_svc else False
+    model = (
+        getattr(request.app.state.settings, "gemini_model", "gemini-3.1-flash-lite")
+        if is_live
+        else "mock-offline"
+    )
+    return {
+        "status": "ok",
+        "llm_connected": is_live,
+        "llm_model": model,
+    }
 
 
 @router.post("/events", response_model=IngestOut, status_code=201)

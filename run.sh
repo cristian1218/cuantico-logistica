@@ -45,9 +45,9 @@ echo ""
 trap 'echo ""; echo "Deteniendo servidores..."; kill 0' SIGINT SIGTERM EXIT
 
 if command -v uv >/dev/null 2>&1; then
-  (cd backend && uv run uvicorn app.main:create_app --factory --port 8000 2>&1 | sed 's/^/[Backend] /') &
+  (cd backend && uv run uvicorn app.main:create_app --factory --reload --port 8000 2>&1 | sed 's/^/[Backend] /') &
 else
-  (cd backend && .venv/bin/uvicorn app.main:create_app --factory --port 8000 2>&1 | sed 's/^/[Backend] /') &
+  (cd backend && .venv/bin/uvicorn app.main:create_app --factory --reload --port 8000 2>&1 | sed 's/^/[Backend] /') &
 fi
 
 (cd frontend && npm run dev 2>&1 | sed 's/^/[Frontend] /') &

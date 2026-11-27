@@ -4,21 +4,25 @@ import { Header } from "./components/Header";
 import { ChatView } from "./components/ChatView";
 import { SearchView } from "./components/SearchView";
 import { IngestView } from "./components/IngestView";
-import { sendChatMessage, checkBackendHealth } from "./api";
+import { sendChatMessage, checkBackendStatus } from "./api";
 import { ChatMessage } from "./types";
 
 export const App: React.FC = () => {
   const [token, setToken] = useState<string>("tok-ops-admin");
   const [activeTab, setActiveTab] = useState<"chat" | "ingest" | "search">("chat");
   const [backendOnline, setBackendOnline] = useState<boolean>(false);
+  const [llmConnected, setLlmConnected] = useState<boolean>(false);
+  const [llmModel, setLlmModel] = useState<string>("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const check = async () => {
-      const ok = await checkBackendHealth();
-      setBackendOnline(ok);
+      const status = await checkBackendStatus();
+      setBackendOnline(status.online);
+      setLlmConnected(status.llmConnected);
+      setLlmModel(status.llmModel);
     };
     check();
     const interval = setInterval(check, 8000);
@@ -62,7 +66,14 @@ export const App: React.FC = () => {
 
   return (
     <div className="app-root">
-      <Header token={token} onTokenChange={setToken} backendOnline={backendOnline} />
+      <Header
+        token={token}
+        onTokenChange={setToken}
+        backendOnline={backendOnline}
+        llmConnected={llmConnected}
+        llmModel={llmModel}
+        isResponding={loading}
+      />
 
       <nav className="tab-navigation">
         <button
@@ -96,6 +107,8 @@ export const App: React.FC = () => {
             error={error}
             onSendMessage={handleSendMessage}
             onClearChat={handleClearChat}
+            llmConnected={llmConnected}
+            llmModel={llmModel}
           />
         )}
         {activeTab === "ingest" && <IngestView token={token} />}
