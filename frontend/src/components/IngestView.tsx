@@ -176,12 +176,12 @@ export const IngestView: React.FC<Props> = ({ token }) => {
       <div className="ingest-header">
         <h2>Simulador Visual de Ingesta (POST /api/events)</h2>
         <p>
-          Prueba en vivo la recepción de eventos, el cálculo determinista de costos, la
+          Simula y audita en vivo la recepción de eventos, el cálculo determinista de costos, la
           idempotencia ante reintentos y el control de acceso multi-tenant sin necesidad de Swagger o cURL.
         </p>
 
         <div className="scenarios-bar">
-          <span className="scenarios-title">Escenarios de prueba preconfigurados:</span>
+          <span className="scenarios-title">Escenarios operativos preconfigurados:</span>
           <div className="scenarios-chips">
             {SCENARIOS.map((sc) => (
               <button

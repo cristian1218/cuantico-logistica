@@ -48,7 +48,7 @@ def test_seed_cases(db: Database) -> None:
 
 
 def test_seed_keeps_untrusted_notes_verbatim_in_storage(db: Database) -> None:
-    """Los datos se guardan tal cual; la defensa ocurre al USARLOS (agente), no al almacenarlos."""
+    """Los datos se guardan tal cual; la mitigacion de seguridad ocurre al utilizarlos en el agente, no al almacenarlos."""
     load_fixtures(db)
     with closing(db.connect()) as conn:
         merchant = repo.get_merchant(conn, "m-la80")

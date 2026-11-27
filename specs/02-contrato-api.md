@@ -35,4 +35,4 @@ Siempre `{error: {code, message}}` (+ `details[{field,message}]` en 422). Nunca 
 | `validation_error` / `unknown_merchant` | 422 | payload inválido / comercio inexistente |
 | `internal_error` | 500 | error no controlado |
 
-El campo `tool_calls` del chat permite al frontend mostrar **los datos consultados** (requisito de la prueba).
+El campo `tool_calls` del chat permite al frontend mostrar y auditar **los datos técnicos consultados** en cada respuesta.

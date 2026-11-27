@@ -46,7 +46,7 @@ export const SearchView: React.FC<Props> = ({ token }) => {
         </p>
 
         <div className="test-payloads">
-          <span className="payloads-title">Casos de prueba (Mitigación SEC1):</span>
+          <span className="payloads-title">Verificación de seguridad (Mitigación SEC1):</span>
           {testPayloads.map((tp, idx) => (
             <button
               key={idx}

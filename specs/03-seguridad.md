@@ -16,6 +16,6 @@ Cada requisito de Operaciones se evaluó; los 4 introducen riesgo y se resuelven
 - El LLM **no calcula** ni ve datos fuera del alcance del usuario. Sus argumentos se validan con esquemas estrictos.
 - Si se pide "más libertad al modelo": la respuesta es que la libertad se amplía añadiendo tools deterministas nuevas, no quitando restricciones.
 
-## Mínimo aceptado en esta prueba (y qué sería con una semana)
+## Alcance Actual y Roadmap de Evolución
 
-Tokens estáticos con alcance (en `.env`) → con una semana: OIDC/JWT, roles, auditoría de consultas del agente, rate limiting, *red teaming* continuo.
+Tokens estáticos con alcance (en `.env`) → roadmap: OIDC/JWT, roles granulares, auditoría de consultas del agente, rate limiting, *red teaming* continuo.

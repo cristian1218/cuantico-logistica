@@ -19,8 +19,8 @@ if [ ! -f backend/.env ]; then
   cp .env.example backend/.env
 fi
 
-# 2. Inicializar la base de datos con los fixtures de prueba (idempotente)
-echo "[2/3] Inicializando base de datos SQLite con datos de prueba..."
+# 2. Inicializar la base de datos con los fixtures del sistema (idempotente)
+echo "[2/3] Inicializando base de datos SQLite con datos iniciales..."
 if command -v uv >/dev/null 2>&1; then
   (cd backend && uv run python -m app.seed >/dev/null 2>&1)
 elif [ -f backend/.venv/bin/python ]; then
