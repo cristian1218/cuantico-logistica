@@ -7,43 +7,42 @@ Prueba técnica para **Desarrollador Senior / Líder Técnico**. Full-stack, arq
 ## 1. Cómo Levantar y Probar el Proyecto
 
 ### Requisitos Previos
-- **Python 3.11+** con gestor `uv` (o `venv` + `pip`).
-- **Node.js 18+** y `npm`.
-- GNU `make`.
-
-### Configuración Rápida (1 minuto)
-```bash
-# 1. Copiar archivo de entorno
-cp .env.example .env
-
-# Opcional: Si deseas usar Google Gemini en vivo, edita .env y coloca tu GEMINI_API_KEY.
-# Si se deja vacío, el sistema utiliza un MockLLM determinista que permite probar
-# el flujo completo de forma offline y reproducible.
-
-# 2. Instalar dependencias completas (Backend Python + Frontend React)
-make setup
-
-# 3. Poblar la base de datos con el dataset de prueba (idempotente)
-make seed
-
-# 4. Ejecutar el quality gate completo (lint, formato, mypy estricto, 105 tests y build de React)
-make check
-```
-
-### Ejecución en Modo Desarrollo
-Para levantar los servidores locales:
-```bash
-# En la Terminal 1 (Backend FastAPI en puerto 8000):
-make dev-backend
-
-# En la Terminal 2 (Frontend React + Vite en puerto 5173):
-make dev-frontend
-```
-Abre tu navegador en:
-- **Frontend React:** `http://localhost:5173` (Chat con agente, visualizador de herramientas, selector de tokens y buscador de entregas).
-- **Swagger UI Interactivo:** `http://localhost:8000/docs` (Documentación OpenAPI interactiva de FastAPI para probar directamente cada endpoint REST: ingesta de eventos, reportes de comercio, mensajeros, detalle y chat con autenticación Bearer).
+- **Python 3.11+** (con `uv` o `pip` estándar)
+- **Node.js 18+** y `npm`
+- GNU `make` (o `bash`)
 
 ---
+
+### Inicio Rápido (En solo 2 pasos)
+
+```bash
+# 1. Instalar dependencias de Backend y Frontend
+make setup
+
+# 2. Iniciar Backend y Frontend simultáneamente con un solo comando
+make run
+```
+*(Alternativa directa sin make: `./run.sh`)*
+
+El comando prepara automáticamente la configuración inicial (`.env`), puebla la base de datos SQLite con el dataset de prueba e inicia ambos servidores:
+- **🌐 Frontend Web (React + Vite):** [`http://localhost:5173`](http://localhost:5173)
+  - 💬 **Asistente Conversacional:** Chat interactivo con orquestación ReAct y herramientas deterministas.
+  - 📥 **Ingesta de Eventos (Simulador POST):** Pruebas visuales de 1 clic para creación de entregas, cálculo de recargo nocturno (15%), entrega fallida (40%), idempotencia y seguridad multi-tenant.
+  - 🔍 **Buscador de Entregas (REST):** Consultas parametrizadas contra inyecciones SQL.
+- **⚙️ Backend API (FastAPI):** [`http://localhost:8000`](http://localhost:8000)
+- **📄 Swagger UI Interactivo:** [`http://localhost:8000/docs`](http://localhost:8000/docs)
+
+---
+
+### Ejecución de Pruebas Automatizadas (Quality Gate)
+Para verificar la suite completa de calidad (linter, formato, mypy estricto en 35 archivos, 105 tests unitarios y build de React):
+```bash
+make check
+```
+*(Para correr únicamente la suite de tests en 3 segundos: `make test`).*
+
+---
+
 
 ## 2. Decisiones de Arquitectura y por qué
 
