@@ -25,12 +25,12 @@ make run
 *(Alternativa directa sin make: `./run.sh`)*
 
 El comando prepara automáticamente la configuración inicial (`.env`), puebla la base de datos SQLite con el dataset de prueba e inicia ambos servidores:
-- **🌐 Frontend Web (React + Vite):** [`http://localhost:5173`](http://localhost:5173)
-  - 💬 **Asistente Conversacional:** Chat interactivo con orquestación ReAct y herramientas deterministas.
-  - 📥 **Ingesta de Eventos (Simulador POST):** Pruebas visuales de 1 clic para creación de entregas, cálculo de recargo nocturno (15%), entrega fallida (40%), idempotencia y seguridad multi-tenant.
-  - 🔍 **Buscador de Entregas (REST):** Consultas parametrizadas contra inyecciones SQL.
-- **⚙️ Backend API (FastAPI):** [`http://localhost:8000`](http://localhost:8000)
-- **📄 Swagger UI Interactivo:** [`http://localhost:8000/docs`](http://localhost:8000/docs)
+- **Frontend Web (React + Vite):** [`http://localhost:5173`](http://localhost:5173)
+  - **Asistente Conversacional:** Chat interactivo con orquestación determinista y herramientas auditables.
+  - **Ingesta de Eventos (Simulador POST):** Pruebas visuales de 1 clic para creación de entregas, cálculo de recargo nocturno (15%), entrega fallida (40%), idempotencia y seguridad multi-tenant.
+  - **Buscador de Entregas (REST):** Consultas parametrizadas contra inyecciones SQL.
+- **Backend API (FastAPI):** [`http://localhost:8000`](http://localhost:8000)
+- **Swagger UI Interactivo:** [`http://localhost:8000/docs`](http://localhost:8000/docs)
 
 ---
 

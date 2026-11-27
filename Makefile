@@ -15,9 +15,9 @@ setup:
 	cd frontend && npm install
 	@echo ""
 	@echo "===================================================================="
-	@echo "  ✅ Setup completado con éxito."
-	@echo "  👉 Para iniciar todo con 1 comando: make run (o ./run.sh)"
-	@echo "  👉 Para correr todos los tests:     make test"
+	@echo "  Setup completado con éxito."
+	@echo "  - Para iniciar todo con 1 comando: make run (o ./run.sh)"
+	@echo "  - Para correr todos los tests:     make test"
 	@echo "===================================================================="
 
 seed:

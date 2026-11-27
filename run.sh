@@ -12,7 +12,7 @@ fi
 
 # 1. Copiar archivo de entorno si no existe
 if [ ! -f .env ]; then
-  echo "📄 [1/3] Creando archivo .env desde .env.example..."
+  echo "[1/3] Creando archivo .env desde .env.example..."
   cp .env.example .env
 fi
 if [ ! -f backend/.env ]; then
@@ -20,7 +20,7 @@ if [ ! -f backend/.env ]; then
 fi
 
 # 2. Inicializar la base de datos con los fixtures de prueba (idempotente)
-echo "🌱 [2/3] Inicializando base de datos SQLite con datos de prueba..."
+echo "[2/3] Inicializando base de datos SQLite con datos de prueba..."
 if command -v uv >/dev/null 2>&1; then
   (cd backend && uv run python -m app.seed >/dev/null 2>&1)
 elif [ -f backend/.venv/bin/python ]; then
@@ -28,21 +28,21 @@ elif [ -f backend/.venv/bin/python ]; then
 fi
 
 # 3. Lanzar servicios concurrentemente
-echo "🚀 [3/3] Levantando Backend y Frontend..."
+echo "[3/3] Levantando Backend y Frontend..."
 echo ""
 echo "======================================================================"
-echo "  ✅ SISTEMA LISTO Y EN EJECUCIÓN"
+echo "  SISTEMA LISTO Y EN EJECUCION"
 echo "======================================================================"
-echo "  🌐 Frontend (App React):       http://localhost:5173"
-echo "  ⚙️  Backend (FastAPI):          http://localhost:8000"
-echo "  📄 Swagger UI Interactivo:     http://localhost:8000/docs"
+echo "  Frontend (App React):       http://localhost:5173"
+echo "  Backend (FastAPI):          http://localhost:8000"
+echo "  Swagger UI Interactivo:     http://localhost:8000/docs"
 echo "======================================================================"
 echo "  Presiona Ctrl + C en cualquier momento para detener los servicios."
 echo "======================================================================"
 echo ""
 
 # Capturar señal de terminación para matar ambos subprocesos al presionar Ctrl+C
-trap 'echo ""; echo "🛑 Deteniendo servidores..."; kill 0' SIGINT SIGTERM EXIT
+trap 'echo ""; echo "Deteniendo servidores..."; kill 0' SIGINT SIGTERM EXIT
 
 if command -v uv >/dev/null 2>&1; then
   (cd backend && uv run uvicorn app.main:create_app --factory --port 8000 2>&1 | sed 's/^/[Backend] /') &
