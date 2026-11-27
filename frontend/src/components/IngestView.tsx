@@ -22,8 +22,8 @@ const SCENARIOS: Scenario[] = [
   {
     id: "sc-1",
     title: "1. Crear Entrega",
-    badge: "📦 Flujo Normal",
-    desc: "Crea el evento inicial para Tienda La 80. Costo inicial queda pendiente.",
+    badge: "Flujo Inicial",
+    desc: "Crea el evento inicial para Tienda La 80. Costo inicial queda en estado pendiente.",
     payload: {
       event_id: `ev-creada-${Date.now().toString().slice(-4)}`,
       delivery_id: `d-demo-${Date.now().toString().slice(-4)}`,
@@ -37,8 +37,8 @@ const SCENARIOS: Scenario[] = [
   {
     id: "sc-2",
     title: "2. Recogida con GPS",
-    badge: "📍 Coordenadas Origen",
-    desc: "Registra que Ana recogió el paquete en portería con lat/lon.",
+    badge: "Geolocalización",
+    desc: "Registra que Ana recogió el paquete en portería con coordenadas lat/lon.",
     payload: {
       event_id: `ev-recogida-${Date.now().toString().slice(-4)}`,
       delivery_id: "d-la80-01",
@@ -53,7 +53,7 @@ const SCENARIOS: Scenario[] = [
   {
     id: "sc-3",
     title: "3. Entrega Nocturna (15%)",
-    badge: "🌙 Recargo 15% + Haversine",
+    badge: "Recargo 15%",
     desc: "Entrega completada a las 22:45 hora local. Liquida distancia + 15% nocturno.",
     payload: {
       event_id: `ev-nocturna-${Date.now().toString().slice(-4)}`,
@@ -69,7 +69,7 @@ const SCENARIOS: Scenario[] = [
   {
     id: "sc-4",
     title: "4. Entrega Fallida (40%)",
-    badge: "❌ Regla R6 (40% Base)",
+    badge: "Regla R6 (40%)",
     desc: "No pudo ser entregada. Cobra exactamente el 40% de tarifa base sin recargos.",
     payload: {
       event_id: `ev-fallida-${Date.now().toString().slice(-4)}`,
@@ -83,7 +83,7 @@ const SCENARIOS: Scenario[] = [
   {
     id: "sc-5",
     title: "5. Idempotencia (Duplicado)",
-    badge: "🔁 Reintento Idéntico",
+    badge: "HTTP 200 Idempotente",
     desc: "Mismo event_id. Debe responder HTTP 200 con duplicate: true sin alterar costos.",
     payload: {
       event_id: "ev-001",
@@ -98,7 +98,7 @@ const SCENARIOS: Scenario[] = [
   {
     id: "sc-6",
     title: "6. Conflicto de Idempotencia",
-    badge: "⚠️ HTTP 409 Conflict",
+    badge: "HTTP 409 Conflict",
     desc: "Mismo event_id con datos distintos. El sistema rechaza atómicamente con 409.",
     payload: {
       event_id: "ev-001",
@@ -111,9 +111,9 @@ const SCENARIOS: Scenario[] = [
   },
   {
     id: "sc-7",
-    title: "7. Test de Seguridad (Multi-tenant)",
-    badge: "🛡️ HTTP 403 Forbidden",
-    desc: "Intenta registrar evento para Tienda La 80. Si en el header tienes token de Café Central, rechaza con 403.",
+    title: "7. Aislamiento Multi-tenant",
+    badge: "HTTP 403 Forbidden",
+    desc: "Intenta registrar evento para Tienda La 80 con token de Café Central (rechazo 403).",
     payload: {
       event_id: `ev-sec3-${Date.now().toString().slice(-4)}`,
       delivery_id: "d-sec3-test",
@@ -181,7 +181,7 @@ export const IngestView: React.FC<Props> = ({ token }) => {
         </p>
 
         <div className="scenarios-bar">
-          <span className="scenarios-title">Pruebas rápidas con 1 clic:</span>
+          <span className="scenarios-title">Escenarios de prueba preconfigurados:</span>
           <div className="scenarios-chips">
             {SCENARIOS.map((sc) => (
               <button
@@ -202,7 +202,7 @@ export const IngestView: React.FC<Props> = ({ token }) => {
         <div className="ingest-editor-card">
           <div className="editor-card-header">
             <div>
-              <strong>Payload del Evento HTTP</strong>
+              <strong>Payload del evento HTTP</strong>
               <small className="scenario-desc">{selectedScenario.desc}</small>
             </div>
             <button
@@ -210,7 +210,7 @@ export const IngestView: React.FC<Props> = ({ token }) => {
               className="btn-reset-scenario"
               onClick={() => setJsonText(JSON.stringify(selectedScenario.payload, null, 2))}
             >
-              🔄 Restaurar
+              Restaurar plantilla
             </button>
           </div>
 
@@ -226,7 +226,7 @@ export const IngestView: React.FC<Props> = ({ token }) => {
 
           {parseError && (
             <div className="json-error-banner">
-              ⚠️ Error de sintaxis en el JSON: {parseError}
+              Error de sintaxis JSON: {parseError}
             </div>
           )}
 
@@ -237,36 +237,34 @@ export const IngestView: React.FC<Props> = ({ token }) => {
               disabled={loading}
               onClick={handleSend}
             >
-              {loading ? "Enviando evento..." : "🚀 Enviar Evento a /api/events"}
+              {loading ? "Enviando evento..." : "Enviar evento (POST /api/events)"}
             </button>
             <span className="auth-hint">
-              Se enviará con el token activo en el header: <code>{token}</code>
+              Token de autorización enviado en cabecera: <code>{token}</code>
             </span>
           </div>
         </div>
 
         <div className="ingest-result-card">
           <div className="editor-card-header">
-            <strong>Respuesta del Backend</strong>
+            <strong>Respuesta del backend</strong>
             {response && (
               <button
                 type="button"
                 className="btn-toggle-json"
                 onClick={() => setShowRawResponse(!showRawResponse)}
               >
-                {showRawResponse ? "👁️ Ver Tarjeta Resumen" : "📄 Ver JSON Crudo"}
+                {showRawResponse ? "Ver resumen" : "Ver JSON crudo"}
               </button>
             )}
           </div>
 
           {!response && (
             <div className="result-placeholder">
-              <div className="placeholder-icon">📬</div>
               <h4>Esperando envío de evento</h4>
               <p>
-                Selecciona uno de los escenarios arriba y haz clic en{" "}
-                <strong>"Enviar Evento"</strong> para observar el código HTTP, la idempotencia y el
-                cálculo de costos en tiempo real.
+                Selecciona uno de los escenarios preconfigurados o edita el payload, y presiona{" "}
+                <strong>Enviar evento</strong> para inspeccionar la respuesta, código HTTP y cálculo de costos.
               </p>
             </div>
           )}
@@ -290,35 +288,34 @@ export const IngestView: React.FC<Props> = ({ token }) => {
                 >
                   {response.status}{" "}
                   {response.status === 201
-                    ? "Created (Evento Creado)"
+                    ? "Created"
                     : response.status === 200
-                    ? "OK (Duplicado Detectado)"
+                    ? "OK (Duplicado)"
                     : response.status === 403
-                    ? "Forbidden (Sin Autorización)"
+                    ? "Forbidden"
                     : response.status === 409
-                    ? "Conflict (Conflicto)"
+                    ? "Conflict"
                     : "Error"}
                 </span>
               </div>
 
               {response.duplicate && (
                 <div className="duplicate-alert">
-                  🔁 <strong>Idempotencia exitosa:</strong> Este evento ya había sido registrado
-                  previamente. El sistema detectó la duplicidad (`duplicate: true`) y devolvió el
-                  estado actual sin recalcular ni duplicar costos.
+                  <strong>Idempotencia detectada:</strong> Este evento ya había sido procesado previamente.
+                  El sistema devuelve el estado actual sin duplicar cobros ni recargos.
                 </div>
               )}
 
               {response.error && (
                 <div className="error-result-alert">
-                  <strong>⚠️ [{response.error.code}]:</strong> {response.error.message}
+                  <strong>[{response.error.code}]:</strong> {response.error.message}
                 </div>
               )}
 
               {response.delivery && (
                 <div className="delivery-card">
                   <div className="delivery-card-title">
-                    📦 Estado derivado de la entrega: <code>{response.delivery.delivery_id}</code>
+                    Estado derivado de la entrega: <code>{response.delivery.delivery_id}</code>
                   </div>
 
                   <div className="tool-kv-grid">

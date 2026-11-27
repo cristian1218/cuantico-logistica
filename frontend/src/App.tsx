@@ -70,21 +70,21 @@ export const App: React.FC = () => {
           className={`tab-btn ${activeTab === "chat" ? "active" : ""}`}
           onClick={() => setActiveTab("chat")}
         >
-          💬 Asistente Conversacional
+          Asistente Conversacional
         </button>
         <button
           type="button"
           className={`tab-btn ${activeTab === "ingest" ? "active" : ""}`}
           onClick={() => setActiveTab("ingest")}
         >
-          📥 Ingesta de Eventos (POST)
+          Ingesta de Eventos (POST)
         </button>
         <button
           type="button"
           className={`tab-btn ${activeTab === "search" ? "active" : ""}`}
           onClick={() => setActiveTab("search")}
         >
-          🔍 Buscador de Entregas (REST)
+          Buscador de Entregas (REST)
         </button>
       </nav>
 

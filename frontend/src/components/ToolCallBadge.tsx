@@ -5,12 +5,12 @@ interface Props {
   toolCall: ToolCall;
 }
 
-const TOOL_DEFINITIONS: Record<string, { label: string; icon: string }> = {
-  get_merchant_totals: { label: "Facturación y Totales de Comercio", icon: "📊" },
-  get_merchant_info: { label: "Información y Notas del Comercio", icon: "ℹ️" },
-  get_courier_status: { label: "Entregas por Mensajero", icon: "🚴" },
-  search_deliveries: { label: "Búsqueda Segura de Entregas", icon: "🔍" },
-  get_delivery_detail: { label: "Detalle de Entrega y Costeo", icon: "📦" },
+const TOOL_DEFINITIONS: Record<string, { label: string }> = {
+  get_merchant_totals: { label: "Facturación y Totales de Comercio" },
+  get_merchant_info: { label: "Información y Notas del Comercio" },
+  get_courier_status: { label: "Entregas por Mensajero" },
+  search_deliveries: { label: "Búsqueda Segura de Entregas" },
+  get_delivery_detail: { label: "Detalle de Entrega y Costeo" },
 };
 
 const ARG_TRANSLATIONS: Record<string, string> = {
@@ -53,7 +53,6 @@ export const ToolCallBadge: React.FC<Props> = ({ toolCall }) => {
 
   const def = TOOL_DEFINITIONS[toolCall.name] || {
     label: toolCall.name,
-    icon: "⚙️",
   };
 
   const renderArgsInSpanish = () => {
@@ -79,7 +78,7 @@ export const ToolCallBadge: React.FC<Props> = ({ toolCall }) => {
       const err = (toolCall.result.error || { message: "Error desconocido" }) as Record<string, any>;
       return (
         <div className="tool-error-alert">
-          <strong>⚠️ {err.code ? `[${err.code}] ` : ""}Operación rechazada:</strong>
+          <strong>{err.code ? `[${err.code}] ` : ""}Operación rechazada:</strong>
           <p>{err.message}</p>
         </div>
       );
@@ -157,7 +156,7 @@ export const ToolCallBadge: React.FC<Props> = ({ toolCall }) => {
             {Boolean(data.notes) && (
               <div className="tool-untrusted-box">
                 <div className="untrusted-header">
-                  🛡️ Notas del comercio (Dato no confiable — SEC2)
+                  Notas del comercio (Fuente no confiable — Mitigación SEC2)
                 </div>
                 <div className="untrusted-content">{String(data.notes)}</div>
               </div>
@@ -298,32 +297,33 @@ export const ToolCallBadge: React.FC<Props> = ({ toolCall }) => {
         type="button"
         className="tool-badge-header"
         onClick={() => setOpen(!open)}
-        title="Clic para desplegar los datos consultados por el sistema"
+        title="Alternar detalle de la consulta determinista"
       >
-        <span className="tool-icon">{isError ? "⚠️" : def.icon}</span>
         <span className="tool-name">
-          {def.label} <small className="tool-technical-name">({toolCall.name})</small>
+          {def.label} <code className="tool-technical-name">{toolCall.name}</code>
         </span>
-        <span className="tool-status">{isError ? "Rechazado" : "Consultado con éxito"}</span>
-        <span className="tool-toggle">{open ? "▲" : "▼"}</span>
+        <span className={`tool-status ${isError ? "status-rejected" : "status-success"}`}>
+          {isError ? "Rechazado" : "Completado"}
+        </span>
+        <span className="tool-toggle">{open ? "Ocultar" : "Detalle"}</span>
       </button>
 
       {open && (
         <div className="tool-badge-body">
           <div className="tool-section">
-            <span className="tool-section-title">Parámetros de consulta:</span>
+            <span className="tool-section-title">Parámetros de entrada</span>
             {renderArgsInSpanish()}
           </div>
 
           <div className="tool-section">
             <div className="tool-section-header-row">
-              <span className="tool-section-title">Respuesta del sistema:</span>
+              <span className="tool-section-title">Resultado de ejecución</span>
               <button
                 type="button"
                 className="btn-toggle-json"
                 onClick={() => setShowRawJson(!showRawJson)}
               >
-                {showRawJson ? "👁️ Ocultar JSON técnico" : "📄 Ver JSON técnico"}
+                {showRawJson ? "Ver resumen" : "Ver JSON técnico"}
               </button>
             </div>
 

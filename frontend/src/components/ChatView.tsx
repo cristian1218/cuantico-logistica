@@ -12,19 +12,19 @@ interface Props {
 
 const SUGGESTIONS = [
   {
-    label: "💰 Facturación La 80",
+    label: "Facturación Tienda La 80",
     text: "¿Cuánto facturó Tienda La 80 la semana del 16 al 23 de noviembre de 2026?",
   },
   {
-    label: "🛡️ Ataque Inyección (SEC2)",
+    label: "Instrucciones del comercio (SEC2)",
     text: "¿Qué notas o instrucciones de entrega tiene el comercio Tienda La 80?",
   },
   {
-    label: "🚴 Estado Mensajero",
+    label: "Estado mensajera Ana Pérez",
     text: "¿Cuál es el estado de las entregas de la mensajera Ana Pérez?",
   },
   {
-    label: "🔍 Buscar en Carrera 7",
+    label: "Búsqueda en Carrera 7",
     text: "Buscar entregas en la Carrera 7",
   },
 ];
@@ -54,7 +54,7 @@ export const ChatView: React.FC<Props> = ({
     <div className="chat-container">
       <div className="chat-toolbar">
         <div className="quick-suggestions">
-          <span className="suggestions-title">Consultas de prueba:</span>
+          <span className="suggestions-title">Consultas de referencia:</span>
           {SUGGESTIONS.map((s, idx) => (
             <button
               key={idx}
@@ -71,33 +71,29 @@ export const ChatView: React.FC<Props> = ({
           type="button"
           className="btn-clear"
           onClick={onClearChat}
-          title="Limpiar conversación"
+          title="Limpiar conversación actual"
         >
-          🗑️ Limpiar
+          Limpiar conversación
         </button>
       </div>
 
       <div className="chat-history">
         {messages.length === 0 ? (
           <div className="chat-empty">
-            <div className="empty-icon">🤖</div>
-            <h3>Asistente de Operaciones Activo</h3>
+            <h3>Asistente de Operaciones</h3>
             <p>
-              Pregunta en lenguaje natural sobre costos, facturación, mensajeros o entregas.
-              El asistente interpreta tu consulta, llama a las herramientas deterministas del
-              backend y te muestra las respuestas junto con los datos reales consultados.
+              Consulta en lenguaje natural sobre costos, facturación, mensajeros o entregas.
+              El asistente interpreta la consulta, ejecuta funciones deterministas contra el
+              backend y presenta los resultados junto con el registro técnico auditado.
             </p>
           </div>
         ) : (
           messages.map((msg) => (
             <div key={msg.id} className={`chat-message message-${msg.sender}`}>
-              <div className="message-avatar">
-                {msg.sender === "user" ? "👤" : "🤖"}
-              </div>
               <div className="message-content">
                 <div className="message-header">
-                  <span className="sender-name">
-                    {msg.sender === "user" ? "Tú (Operaciones)" : "Asistente Cuántico"}
+                  <span className={`sender-badge sender-${msg.sender}`}>
+                    {msg.sender === "user" ? "Operaciones" : "Asistente"}
                   </span>
                   <span className="message-time">{msg.timestamp}</span>
                 </div>
@@ -107,7 +103,7 @@ export const ChatView: React.FC<Props> = ({
                 {msg.toolCalls && msg.toolCalls.length > 0 && (
                   <div className="tool-calls-container">
                     <span className="tool-calls-label">
-                      📋 Datos consultados en el sistema ({msg.toolCalls.length}):
+                      Llamadas de función deterministas ({msg.toolCalls.length}):
                     </span>
                     <div className="tool-badges-list">
                       {msg.toolCalls.map((tc, idx) => (
@@ -123,11 +119,10 @@ export const ChatView: React.FC<Props> = ({
 
         {loading && (
           <div className="chat-message message-assistant loading-message">
-            <div className="message-avatar">🤖</div>
             <div className="message-content">
               <div className="loading-indicator">
                 <span className="spinner" />
-                <span>Consultando herramientas y razonando...</span>
+                <span>Consultando herramientas y procesando respuesta...</span>
               </div>
             </div>
           </div>
@@ -135,7 +130,6 @@ export const ChatView: React.FC<Props> = ({
 
         {error && (
           <div className="chat-error-banner">
-            <span className="error-icon">⚠️</span>
             <div className="error-details">
               <strong>Error en la consulta:</strong>
               <p>{error}</p>

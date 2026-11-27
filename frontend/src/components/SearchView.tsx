@@ -46,7 +46,7 @@ export const SearchView: React.FC<Props> = ({ token }) => {
         </p>
 
         <div className="test-payloads">
-          <span className="payloads-title">Pruebas rápidas de seguridad:</span>
+          <span className="payloads-title">Casos de prueba (Mitigación SEC1):</span>
           {testPayloads.map((tp, idx) => (
             <button
               key={idx}
@@ -65,7 +65,7 @@ export const SearchView: React.FC<Props> = ({ token }) => {
           <input
             type="text"
             value={query}
-            placeholder="Escribe texto libre (ej. comercio, dirección o ' OR 1=1 --)..."
+            placeholder="Buscar por comercio, dirección o payload SQL..."
             onChange={(e) => setQuery(e.target.value)}
           />
           <button type="submit" disabled={!query.trim() || loading} className="btn-send">
@@ -76,7 +76,6 @@ export const SearchView: React.FC<Props> = ({ token }) => {
 
       {error && (
         <div className="chat-error-banner">
-          <span className="error-icon">⚠️</span>
           <div>
             <strong>Error en la búsqueda:</strong>
             <p>{error}</p>

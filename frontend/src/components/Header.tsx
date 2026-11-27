@@ -10,17 +10,17 @@ export const Header: React.FC<Props> = ({ token, onTokenChange, backendOnline })
   return (
     <header className="app-header">
       <div className="header-brand">
-        <span className="brand-logo">📦</span>
-        <div>
+        <div className="brand-text">
           <h1>Cuántico Logística</h1>
-          <p className="subtitle">Asistente de Operaciones y Control de Entregas</p>
+          <span className="brand-divider">/</span>
+          <span className="subtitle">Control de Operaciones y Liquidación</span>
         </div>
       </div>
 
       <div className="header-controls">
-        <div className="status-pill">
+        <div className="system-status-indicator">
           <span className={`status-dot ${backendOnline ? "online" : "offline"}`} />
-          <span>{backendOnline ? "API Online (8000)" : "API No Conectada"}</span>
+          <span className="status-label">{backendOnline ? "API :8000 activa" : "API desconectada"}</span>
         </div>
 
         <div className="token-control">
@@ -30,9 +30,9 @@ export const Header: React.FC<Props> = ({ token, onTokenChange, backendOnline })
             value={token}
             onChange={(e) => onTokenChange(e.target.value)}
           >
-            <option value="tok-ops-admin">👑 Admin Operaciones (Alcance Global)</option>
-            <option value="tok-la80-001">🏪 Operador Tienda La 80 (Acotado)</option>
-            <option value="tok-cafe-001">☕ Operador Café Central (Acotado)</option>
+            <option value="tok-ops-admin">Admin Operaciones (Acceso Global)</option>
+            <option value="tok-la80-001">Operador Tienda La 80 (Acotado)</option>
+            <option value="tok-cafe-001">Operador Café Central (Acotado)</option>
           </select>
         </div>
       </div>
