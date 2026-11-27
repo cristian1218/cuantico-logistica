@@ -31,7 +31,16 @@ const formatDate = (isoStr: string | null | undefined): string => {
   if (!isoStr) return "—";
   try {
     const d = new Date(isoStr);
-    return d.toLocaleString("es-CO", { dateStyle: "medium", timeStyle: "short" });
+    if (isNaN(d.getTime())) return String(isoStr);
+
+    // Si la hora es medianoche UTC (filtros por fecha estándar del sistema), mostramos la fecha en UTC
+    const isMidnightUTC =
+      d.getUTCHours() === 0 && d.getUTCMinutes() === 0 && d.getUTCSeconds() === 0;
+    if (isMidnightUTC) {
+      return d.toLocaleDateString("es-CO", { timeZone: "UTC", dateStyle: "medium" });
+    }
+
+    return `${d.toLocaleString("es-CO", { timeZone: "UTC", dateStyle: "medium", timeStyle: "short" })} UTC`;
   } catch {
     return String(isoStr);
   }
