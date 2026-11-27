@@ -32,7 +32,7 @@ class LLMClient(Protocol):
 class GeminiLLMClient:
     """Cliente real usando el SDK oficial de Google GenAI."""
 
-    def __init__(self, api_key: str, model: str = "gemini-3.5-flash") -> None:
+    def __init__(self, api_key: str, model: str = "gemini-3.1-flash-lite") -> None:
         self.client = genai.Client(api_key=api_key)
         self.model = model
         self.config = types.GenerateContentConfig(
