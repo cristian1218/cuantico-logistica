@@ -6,7 +6,7 @@
 
 ## 1. Herramientas Utilizadas
 - **Asistente de IA (GitHub Copilot / Claude 3.5 Sonnet en IDE):** Utilizado como par de programación para acelerar la generación de esqueletos iniciales, redacción de especificaciones técnicas y scaffolding de pruebas unitarias.
-- **Google Gemini 2.0 Flash (API):** Modelo de lenguaje integrado exclusivamente en el producto final para atender las consultas conversacionales de los usuarios en lenguaje natural (orquestación mediante llamadas a herramientas).
+- **Google Gemini (API):** Modelo de lenguaje integrado exclusivamente en el producto final para atender las consultas conversacionales de los usuarios en lenguaje natural (orquestación mediante llamadas a herramientas).
 
 ---
 
